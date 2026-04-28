@@ -40,23 +40,26 @@ if [ "$UPDATE_BACKEND" = "true" ]; then
 
   if [ ! -f "$APP_DIR/backend/hrbp.sqlite" ]; then
     echo "=== Veritabanı seed ediliyor ==="
-    JWT_SECRET="$JWT_SECRET" node seed.js
+    node seed.js
   fi
 
-  # ecosystem.config.js oluştur (JWT_SECRET'ı pm2'ye iletmek için)
-  cat > "$APP_DIR/backend/ecosystem.config.js" << ECOSYSTEM
-module.exports = {
-  apps: [{
-    name: 'magaza-backend',
-    script: 'server.js',
-    env: {
-      NODE_ENV: 'production',
-      JWT_SECRET: '${JWT_SECRET}',
-      PORT: 5000
-    }
-  }]
-};
-ECOSYSTEM
+  # ecosystem.config.js'i Node ile yaz (shell escape sorunlarını önler)
+  node -e "
+    const fs = require('fs');
+    const config = {
+      apps: [{
+        name: 'magaza-backend',
+        script: 'server.js',
+        env: {
+          NODE_ENV: 'production',
+          JWT_SECRET: process.env.JWT_SECRET,
+          CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3003',
+          PORT: parseInt(process.env.PORT) || 5000
+        }
+      }]
+    };
+    fs.writeFileSync('ecosystem.config.js', 'module.exports = ' + JSON.stringify(config, null, 2));
+  "
 
   if pm2 list | grep -q "magaza-backend"; then
     pm2 reload ecosystem.config.js
