@@ -1,4 +1,4 @@
-# Mağaza Ziyaret Formu
+# Mağaza Ziyaret Sistemi
 
 HRBP'lerin mağaza ziyaretlerini kayıt altına aldığı, yöneticilerin raporları takip edebildiği web uygulaması.
 
