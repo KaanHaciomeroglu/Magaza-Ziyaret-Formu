@@ -2,6 +2,9 @@
 
 HRBP'lerin mağaza ziyaretlerini kayıt altına aldığı, yöneticilerin raporları takip edebildiği web uygulaması.
 
+### https://magazaziyaret.wolee.cloud/ 
+> Login: viewer@test.com / viewer123
+
 ![alt text](image.png)
 
 ## Özellikler
